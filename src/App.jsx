@@ -58,8 +58,6 @@ function App() {
               const res = await axios.get(`https://lichess.org/api/games/user/${playerId1}`)
               let temp = [];
 
-              
-              console.log(res.data);
               let temp_obj = {};
               res.data.split('\n').map((d) => {
                 if(d[0] === '['){
@@ -69,7 +67,6 @@ function App() {
                 }
                 else{
                   if(Object.keys(temp_obj).length !== 0){
-                    // console.log(temp_obj);
                     temp.push(temp_obj);
                     temp_obj = {};
                   }
@@ -78,6 +75,7 @@ function App() {
               
               const val = Math.min(temp.length, 10);
               setGames(temp.slice(0, val));
+              console.log(temp)
             }
             catch(err){
               console.log(err);
@@ -85,16 +83,26 @@ function App() {
           }}
         >Fetch top 10</button>
         
-        {games && games.map((d) => {
-          <table>
-            <thead>
-              <td>Opponent name</td>
-              <td>Result</td>
-              <td>Opening name</td>
-              <td>Date</td>
-            </thead>
-          </table>
-        })}
+        <table>
+                <thead>
+                    <tr>
+                        <th>Opponent name</th>
+                        <th>Result</th>
+                        <th>Opening name</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {games && games.map((game, index) => (
+                        <tr key={index}>
+                            <td>{game.Black === "${playerId1}" ? game.White : game.Black}</td>
+                            <td>{game.Result === '"1-0"' ? "win" : "loos"}</td>
+                            <td>{game.Variant}</td>
+                            <td>{game.Date}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         
       </div>
     </div>
